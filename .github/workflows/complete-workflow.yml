@@ -46,3 +46,4 @@ jobs:
         with:
           target: 'http://demo.testfire.net'   # use a reachable demo site
           cmd_options: '-a'
+          allow_issue_writing: false           # prevents failure if Issues are disabled
