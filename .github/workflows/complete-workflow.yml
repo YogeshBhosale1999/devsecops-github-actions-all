@@ -17,7 +17,11 @@ jobs:
           cache: maven
 
       - name: Build and SonarCloud Scan
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=YogeshBhosale1999_devsecops-github-actions-all -Dsonar.organization=yogeshbhosale1999 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=YogeshBhosale1999_devsecops-github-actions-all \
+          -Dsonar.organization=yogeshbhosale1999 \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -44,6 +48,15 @@ jobs:
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://demo.testfire.net'   # use a reachable demo site
+          target: 'http://demo.testfire.net'
           cmd_options: '-a'
-          allow_issue_writing: true           # prevents failure if Issues are disabled
+          issue_title: 'ZAP Security Scan Findings'
+          issue_description: 'Automated DAST scan detected potential issues. See attached reports.'
+      - name: Upload ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            report_html.html
+            report_md.md
+            report_json.json
